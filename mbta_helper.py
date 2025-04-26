@@ -28,11 +28,11 @@ def get_coordinates(place_name):
         coords = data["features"][0]["center"]
         return coords[1], coords[0]  # lat, lon
     
-def get_json(url: str) -> dict:
+def get_json(url: str) -> dict: #this code is used to get the json data from the url
         with urllib.request.urlopen(url) as response:
             return json.loads(response.read().decode("utf-8"))
 
-def get_lat_lng(place_name: str) -> tuple[str, str]:
+def get_lat_lng(place_name: str) -> tuple[str, str]: #this code is used to get the letitude and longitude of the place
     query = quote(place_name)
     url = f"{MAPBOX_BASE_URL}/{query}.json?access_token={MAPBOX_TOKEN}&types=address,place,poi"
     data = get_json(url)
@@ -50,17 +50,17 @@ def get_nearest_station(latitude: str, longitude: str) -> tuple[str, bool]:
         data = json.load(response)
         stop = data["data"][0]["attributes"]
         return stop["name"], stop["wheelchair_boarding"] == 1
-def find_stop_near(place_name: str) -> tuple[str, bool]:
+def find_stop_near(place_name: str) -> tuple[str, bool]: #this code is used to find the nearest stop near the place name
     lat, lon = get_coordinates(place_name)
     return get_nearest_station(lat, lon)
 
-def main():
+def main(): # Example usage
     place = "Boston Public Library"
     lat, lng = get_lat_lng(place)
     print(f"Coordinates of {place}: {lat}, {lng}")
     stop, accessible = get_nearest_station(lat, lng)
     print(f"Nearest Stop: {stop}, Accessible: {'Yes' if accessible else  'No'}")
 
-
+# Example usage of find_stop_near function
 if __name__ == "__main__":
     main()
